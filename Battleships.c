@@ -3,27 +3,30 @@
 #include <string.h>
 #include <time.h>
 #include <BattleShipFuncDecl.h>
-#include <BattleShipFunc.c>
+#include <physics.h>
 
 typedef struct {
+	const char *type;
+	int positionX;
+	int positionY;
+	float angle;
+	double vMin;
+	double vMax;
+	double gamma;
+	int shotsFired;
+	int destroyed;
 
-	char typeNotation[3];
-	char typeName[30];
-	char gunName[30];
-	float impactPower;
-	int angleRange;
-	int minimumAngles;
-	int minimumVelocity;
-	int maximumVelocity;
-
-} ES;
-
-typedef struct {
-
-	char bshipName[20];
-	char notation;
-	char gunName[25];
 } BS;
+
+typedef struct {
+
+	char *ID;
+	char type;
+	int positionX;
+	int positionY;
+	double vMIn;
+	double vMax;
+} ES;
 
 int main(){
 
