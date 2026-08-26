@@ -5,28 +5,31 @@
 #define GRAVITY 10
 #define PI 3.14159
 
-double degToRad(double deg) {
+
+//converting degrees to pi
+double degToRad(double deg){
     return deg * (PI / 180.0);
 }
 
-double getDistance(Position p1, Position p2) {
+
+double getDistance(Position p1, Position p2){
     double dx = p2.x - p1.x;
     double dy = p2.y - p1.y;
 
-    return sqrt(pow(dx,2) + pow(dy,2);
+    return sqrt(pow(dx,2) + pow(dy,2));
 }
 
-bool canHitTarget(Position shooter, Position target, double vMin, double vMax, 
-                 double aMinDeg, double aMaxDeg, double *timeOfFlight) {
+//determinig if the target can be reached
+bool canHitTarget(Position shooter, Position target, double vMin, double vMax, double aMinDeg, double aMaxDeg, double *timeOfFlight) {
     double R = getDistance(shooter, target);
     double aMin = degToRad(aMinDeg);
     double aMax = degToRad(aMaxDeg);
 
-    // Step-by-step velocity and angle sweep
+    
     for (double v = vMin; v <= vMax; v += 1.0) {
         double val = (R * GRAVITY) / (v * v);
         if (val <= 1.0) {
-            double theta = 0.5 * asin(val); // Launch angle
+            double theta = 0.5 * asin(val);
             if (theta >= aMin && theta <= aMax) {
                 if (timeOfFlight != NULL) {
                     *timeOfFlight = (2.0 * v * sin(theta)) / GRAVITY;
@@ -37,14 +40,6 @@ bool canHitTarget(Position shooter, Position target, double vMin, double vMax,
     }
     return false;
 }
-
-
-
-double max_angle(){
-
-
-}
-
 double range(double speed, double teta){
 	return (pow(speed, 2)* sin(2 * teta))/GRAVITY;
 }

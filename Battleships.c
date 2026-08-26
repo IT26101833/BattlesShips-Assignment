@@ -4,6 +4,7 @@
 #include <time.h>
 #include <BattleShipFuncDecl.h>
 #include <physics.h>
+#include "structures.h"
 
 #define GRAVITY 10
 #define PI 3.14159
