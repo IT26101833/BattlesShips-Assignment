@@ -1,5 +1,40 @@
 #include <stdio.h>
 
+int board_draw_input(){
+	int grid_value;
+	printf("Enter the grid value: ");
+	scanf("%d", &grid_value);
+	return grid_value;
+}
+void draw_board(int Grid_Value){
+
+	for(int i = 0; i < Grid_Value; i++){
+		for(int j = 0; j < Grid_Value; j++){
+			printf("|");
+		}
+		printf(" ");
+	}
+	printf("\n");
+
+
+
+}
+
+void initial_settingsForBS(){
+
+	printf("Enter the battleship type: \n");
+	printf("Enter battleship size: \n");
+	printf("Enter battleship starting position x: \n");
+	printf("Enter battleship starting position y: \n");
+
+}
+
+int initial_settingsForES(ES EShips[]){
+	printf("Enter the number of Escort Ships: ");
+	scanf("%d", &numOfEs);
+
+}
+
 
 void main_menu(ES *EShips[5]){
 
@@ -17,7 +52,7 @@ void main_menu(ES *EShips[5]){
 		printf("------------------------------1.) Start Simulation----------------------------------\n");
 		printf("-----------------------------2.) View Instructions----------------------------------\n");
 		printf("---------------------------3.) Simulation Statistics--------------------------------\n");
-		printf("-----------------------------------4.) Exit-----------------------------------------\n");
+		printf("-------------------------------------4.) Exit---------------------------------------\n");
 		printf("************************************************************************************\n");
 		printf("************************************************************************************\n");
 		printf("************************************************************************************\n");
@@ -29,7 +64,7 @@ void main_menu(ES *EShips[5]){
 		switch(option){
 			case 1: 
 
-					initializingES(EShips);
+					printf("Start Simulations");
 					break;
 			case 2:
 					printf("Instructions Setup\n");

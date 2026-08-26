@@ -5,28 +5,9 @@
 #include <BattleShipFuncDecl.h>
 #include <physics.h>
 
-typedef struct {
-	const char *type;
-	int positionX;
-	int positionY;
-	float angle;
-	double vMin;
-	double vMax;
-	double gamma;
-	int shotsFired;
-	int destroyed;
+#define GRAVITY 10
+#define PI 3.14159
 
-} BS;
-
-typedef struct {
-
-	char *ID;
-	char type;
-	int positionX;
-	int positionY;
-	double vMIn;
-	double vMax;
-} ES;
 
 int main(){
 
