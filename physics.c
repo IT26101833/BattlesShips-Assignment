@@ -43,3 +43,8 @@ bool canHitTarget(Position shooter, Position target, double vMin, double vMax, d
 double range(double speed, double teta){
 	return (pow(speed, 2)* sin(2 * teta))/GRAVITY;
 }
+
+//calculating impact
+double getDegradedImpact(double baseImpact, double gamma, int shotsFired) {
+    return baseImpact * exp(-gamma * (double)shotsFired);
+}
