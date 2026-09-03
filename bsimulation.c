@@ -3,7 +3,7 @@
 #include <string.h>
 #include <stdbool.h>
 #include <time.h>
-#include <physics.h>
+#include "physics.h"
 #include "structures.h"
 
 #define GRAVITY 10

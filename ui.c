@@ -7,7 +7,7 @@
 //triggering the simulatoin
 void runfullSimulation(Battleship *b, EscortShip escorts[], int numEscorts, FILE *logFile);
 
-int board_draw_input(void) {
+int board_draw_input(void){
     int grid_value;
     printf("Enter the grid value: ");
     if (scanf("%d", &grid_value) != 1) return 1000;
@@ -15,7 +15,7 @@ int board_draw_input(void) {
 }
 
 //drawing the board
-void draw_board(int Grid_Value) {
+void draw_board(int Grid_Value){
     for (int i = 0; i < Grid_Value; i++) {
         for (int j = 0; j < Grid_Value; j++) {
             printf("|");
@@ -25,7 +25,7 @@ void draw_board(int Grid_Value) {
     printf("\n");
 }
 
-void initial_settingsForBS(Battleship *b) {
+void initial_settingsForBS(Battleship *b){
     printf("\n--- BATTLESHIP SETUP ---\n");
     printf("Enter Battleship Name: ");
     scanf(" %[^\n]", b->typeName);
@@ -54,7 +54,7 @@ void initial_settingsForBS(Battleship *b) {
     b->reloadTime = 5.0;
 }
 
-void initial_settingsForES(EscortShip escorts[], int *numEscorts, double gridSize) {
+void initial_settingsForES(EscortShip escorts[], int *numEscorts, double gridSize){
     printf("\n--- ESCORT SHIPS SETUP ---\n");
     printf("Enter the number of Escort Ships: ");
     scanf("%d", numEscorts);
@@ -84,7 +84,7 @@ void initial_settingsForES(EscortShip escorts[], int *numEscorts, double gridSiz
     printf("Generated %d escort ships successfully.\n", *numEscorts);
 }
 
-void view_instructions(void) {
+void view_instructions(void){
     printf("\n====================================================================================\n");
     printf("-----------------------------------INSTRUCTIONS-------------------------------------\n");
     printf("1. Battleship (B) fires every reload interval at detected escort targets.\n");
@@ -94,7 +94,7 @@ void view_instructions(void) {
     printf("====================================================================================\n");
 }
 
-void view_statistics(void) {
+void view_statistics(void){
     printf("\n--- SIMULATION STATISTICS ---\n");
     FILE *logFile = fopen("sim_output.txt", "r");
     if (logFile) {
@@ -108,7 +108,7 @@ void view_statistics(void) {
     }
 }
 
-void setup(EscortShip escorts[], Battleship *b, SimConfig *config) {
+void setup(EscortShip escorts[], Battleship *b, SimConfig *config){
     int option = 0;
     do {
         printf("||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||\n");
@@ -118,7 +118,7 @@ void setup(EscortShip escorts[], Battleship *b, SimConfig *config) {
         printf("====================++++++++++++++++SETUP MENU+++++++++++++++=======================\n");
         printf("====================++++++++1.) Battleship Properties++++++++=======================\n");
         printf("====================++++++++2.) Escort ship Properties+++++++=======================\n");
-        print("=====================+++++++++++++3.) Seed Value++++++++++++++======================+\n");
+        printf("=====================+++++++++++++3.) Seed Value++++++++++++++======================\n");
         printf("====================++++++++4.) Return to main menu++++++++++=======================\n");
         printf("====================================================================================\n");
         printf("------------------------------------------------------------------------------------\n");
@@ -150,7 +150,7 @@ void setup(EscortShip escorts[], Battleship *b, SimConfig *config) {
     } while(option != 4);
 }
 
-void start_simulation_flow(SimConfig *config, Battleship *b) {
+void start_simulation_flow(SimConfig *config, Battleship *b){
     EscortShip *escorts = malloc(sizeof(EscortShip) * config->numEscorts);
     if (!escorts) {
         printf("Memory allocation failed!\n");
@@ -193,7 +193,7 @@ void start_simulation_flow(SimConfig *config, Battleship *b) {
     free(escorts);
 }
 
-void main_menu(SimConfig *config, Battleship *b) {
+void main_menu(SimConfig *config, Battleship *b){
     int option = 0;
     EscortShip tempEscorts[50];
 
