@@ -223,19 +223,16 @@ void main_menu(SimConfig *config, Battleship *b){
                 start_simulation_flow(config, b);
                 break;
             case 2:
-                setup(tempEscorts, b, config);
-                break;
-            case 3:
                 view_instructions();
                 break;
-            case 4:
+            case 3:
                 view_statistics();
                 break;
-            case 5:
+            case 4:
                 printf("Exiting Program...\n");
                 break;
             default:
                 printf("Option out of range.\n");
         }
-    } while(option != 5);
+    } while(option != 4);
 }

@@ -1,3 +1,6 @@
+#ifndef STRUCTURES_H
+#define STRUCTURES_H
+
 #include <stdbool.h>
 
 
@@ -50,3 +53,5 @@ typedef struct {
     unsigned int seed;
     int numEscorts;
 } SimConfig;
+
+#endif

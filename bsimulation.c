@@ -9,10 +9,6 @@
 #define GRAVITY 10
 #define PI 3.14159
 
-double getDistance(Position p1, Position p2);
-bool canHitTarget(Position shooter, Position target, double vMin, double vMax, double aMinDeg, double aMaxDeg, double *timeOfFlight);
-double getDegradedImpact(double baseImpact, double gamma, int shotsFired);
-
 
 int selectTargetEscort(Battleship b, EscortShip escorts[], int numEscorts) {
     int targetIdx = -1;

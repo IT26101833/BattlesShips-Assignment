@@ -1,8 +1,9 @@
 #include <math.h>
 #include <stdio.h>
 #include "structures.h"
+#include <stdbool.h>
 
-#define GRAVITY 10
+#define GRAVITY 9.81
 #define PI 3.14159
 
 
@@ -20,7 +21,7 @@ double getDistance(Position p1, Position p2){
 }
 
 //determinig if the target can be reached
-bool canHitTarget(Position shooter, Position target, double vMin, double vMax, double aMinDeg, double aMaxDeg, double *timeOfFlight) {
+bool canHitTarget(Position shooter, Position target, double vMin, double vMax, double aMinDeg, double aMaxDeg, double *timeOfFlight){
     double R = getDistance(shooter, target);
     double aMin = degToRad(aMinDeg);
     double aMax = degToRad(aMaxDeg);
@@ -45,6 +46,6 @@ double range(double speed, double teta){
 }
 
 //calculating impact
-double getDegradedImpact(double baseImpact, double gamma, int shotsFired) {
+double getDegradedImpact(double baseImpact, double gamma, int shotsFired){
     return baseImpact * exp(-gamma * (double)shotsFired);
 }

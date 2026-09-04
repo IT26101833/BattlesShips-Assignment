@@ -3,6 +3,7 @@
 #include <string.h>
 #include <time.h>
 #include "structures.h"
+#include "ui.h"
 
 
 int main() {
