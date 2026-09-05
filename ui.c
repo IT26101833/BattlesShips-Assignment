@@ -4,6 +4,8 @@
 #include "ui.h"
 #include "structures.h"
 
+#define MAX_ESCORTS 50
+
 //triggering the simulatoin
 void runfullSimulation(Battleship *b, EscortShip escorts[], int numEscorts, FILE *logFile);
 
@@ -25,39 +27,82 @@ void draw_board(int Grid_Value){
     printf("\n");
 }
 
-void initial_settingsForBS(Battleship *b){
+//reads a number and keeps asking until it is inside the allowed range
+static double readInRange(const char *prompt, double min, double max){
+    double value;
+    int c;
+
+    do {
+        printf("%s (%.2f - %.2f): ", prompt, min, max);
+
+        if (scanf("%lf", &value) != 1){
+            do { c = getchar(); } while (c != '\n' && c != EOF); //clear the invalid input
+            printf("Invalid input. Please enter a number.\n");
+            value = min - 1.0;
+        } else if (value < min || value > max) {
+            printf("Out of range. Allowed range is %.2f to %.2f.\n", min, max);
+        }
+    } while (value < min || value > max);
+
+    return value;
+}
+
+void initial_settingsForBS(Battleship *b, double gridSize){
+
+
     printf("\n--- BATTLESHIP SETUP ---\n");
+    printf("Available battleship types:\n");
+    printf("  Notation | Name                | Gun\n");
+    printf("  -------- | ------------------- | ------------------------\n");
+    printf("        U  | USS Iowa BB-61      | 50-caliber Mark 7 gun\n");
+    printf("        M  | MS King George V    | (356 mm) Mark VII gun\n");
+    printf("        R  | Richelieu           | (15 inch) Mle 1935 gun\n");
+    printf("        S  | Sovetsky Soyuz-class| (16 inch) B-37 gun\n");
     printf("Enter Battleship Name: ");
     scanf(" %[^\n]", b->typeName);
     printf("Enter Battleship Notation (e.g., U): ");
     scanf("%4s", b->typeNotation);
-    printf("Enter Battleship starting position X: ");
-    scanf("%lf", &b->pos.x);
-    printf("Enter Battleship starting position Y: ");
-    scanf("%lf", &b->pos.y);
-    printf("Enter Min Velocity: ");
-    scanf("%lf", &b->vMin);
-    printf("Enter Max Velocity: ");
-    scanf("%lf", &b->vMax);
-    printf("Enter Min Angle: ");
-    scanf("%lf", &b->angleMin);
-    printf("Enter Max Angle: ");
-    scanf("%lf", &b->angleMax);
-    printf("Enter Base Impact Power (e.g., 0.5): ");
-    scanf("%lf", &b->impactPower);
-    printf("Enter Gamma (degredation factor): ");
-    scanf("%lf", &b->gamma);
-    
+
+    b->pos.x = readInRange("Enter Battleship starting position X", 0.0, gridSize);
+    b->pos.y = readInRange("Enter Battleship starting position Y", 0.0, gridSize);
+
+    b->vMin = readInRange("Enter Min Velocity", 0.0, 5000.0);
+    do {
+        b->vMax = readInRange("Enter Max Velocity", 0.0, 5000.0);
+        if (b->vMax <= b->vMin) {
+            printf("Out of range. Max Velocity must be greater than Min Velocity (%.2f).\n", b->vMin);
+        }
+    } while (b->vMax <= b->vMin);
+
+    b->angleMin = readInRange("Enter Min Angle (degrees)", 0.0, 90.0);
+    do{
+        b->angleMax = readInRange("Enter Max Angle (degrees)", 0.0, 90.0);
+        if (b->angleMax <= b->angleMin) {
+            printf("Out of range. Max Angle must be greater than Min Angle (%.2f).\n", b->angleMin);
+        }
+    } while (b->angleMax <= b->angleMin);
+
+    b->impactPower = readInRange("Enter Base Impact Power (e.g., 0.5)", 0.0, 1.0);
+    b->gamma = readInRange("Enter Gamma (degradation factor)", 0.0, 1.0);
+    b->reloadTime = readInRange("Enter Reload Time (seconds between shots)", 0.1, 60.0);
+
     b->shotsFired = 0;
     b->health = 1.0;
     b->destroyed = false;
-    b->reloadTime = 5.0;
 }
-
+//function to initializing escortships
 void initial_settingsForES(EscortShip escorts[], int *numEscorts, double gridSize){
     printf("\n--- ESCORT SHIPS SETUP ---\n");
-    printf("Enter the number of Escort Ships: ");
+    printf("Enter the number of Escort Ships (1-%d): ", MAX_ESCORTS);
     scanf("%d", numEscorts);
+
+    //validate the number of escort ships
+    while (*numEscorts < 1 || *numEscorts > MAX_ESCORTS) {
+        //print this erro if not in the range
+        printf("Invalid number. Please enter a value between 1 and %d: ", MAX_ESCORTS);
+
+        scanf("%d", numEscorts);
+    }
 
     const char *types[] = {"EA", "EB", "EC", "ED", "EE"};
     double baseImpacts[] = {0.08, 0.06, 0.07, 0.05, 0.04};
@@ -77,11 +122,16 @@ void initial_settingsForES(EscortShip escorts[], int *numEscorts, double gridSiz
         escorts[i].impactPower = baseImpacts[typeIdx];
         escorts[i].gamma = 0.01;
         escorts[i].shotsFired = 0;
+        escorts[i].health = 1.0;
         escorts[i].destroyed = false;
         escorts[i].reloadTime = 2.0 + (typeIdx * 0.5);
         escorts[i].nextFiringTime = 0.0;
     }
+
     printf("Generated %d escort ships successfully.\n", *numEscorts);
+
+
+
 }
 
 void view_instructions(void){
@@ -129,17 +179,20 @@ void setup(EscortShip escorts[], Battleship *b, SimConfig *config){
 
         switch(option) {
             case 1:
-                initial_settingsForBS(b);
+                initial_settingsForBS(b, config->battlefieldSize);
                 break;
+
             case 2:
+
                 initial_settingsForES(escorts, &config->numEscorts, config->battlefieldSize);
                 break;
+
             case 3:
-                printf("Enter Random Seed: ");
+                printf("Enter Random Seed (0 - 4294967295): ");
+
                 scanf("%u", &config->seed);
                 srand(config->seed);
-                printf("Enter Grid Size (D): ");
-                scanf("%lf", &config->battlefieldSize);
+                config->battlefieldSize = readInRange("Enter Grid Size (D)", 1.0, 100000.0);
                 break;
             case 4:
                 printf("Returning to main menu...\n");
@@ -151,11 +204,20 @@ void setup(EscortShip escorts[], Battleship *b, SimConfig *config){
 }
 
 void start_simulation_flow(SimConfig *config, Battleship *b, EscortShip customEscorts[]){
+    //guard against more escorts than the stored array can hold
+    if (config->numEscorts < 1) config->numEscorts = 1;
+    if (config->numEscorts > MAX_ESCORTS) config->numEscorts = MAX_ESCORTS;
+
     EscortShip *escorts = malloc(sizeof(EscortShip) * config->numEscorts);
-    if (!escorts) {
+    if (!escorts){
         printf("Memory allocation failed!\n");
         return;
     }
+
+    //reset battleship state so it starts each simulation fresh
+    b->health = 1.0;
+    b->destroyed = false;
+    b->shotsFired = 0;
 
     //copy user desired configurations or genreate randomely
     for (int i = 0; i < config->numEscorts; i++) {
@@ -185,13 +247,23 @@ void start_simulation_flow(SimConfig *config, Battleship *b, EscortShip customEs
         }
     }
 
+    //reset per-run state so ships start each simulation fresh
+    for (int i = 0; i < config->numEscorts; i++) {
+        escorts[i].health = 1.0;
+        escorts[i].destroyed = false;
+        escorts[i].shotsFired = 0;
+        escorts[i].nextFiringTime = 0.0;
+    }
+
     FILE *logFile = fopen("sim_output.txt", "w");
     if (logFile) {
+
         printf("\nExecuting Simulation... Results outputting to sim_output.txt\n");
         runfullSimulation(b, escorts, config->numEscorts, logFile);
         fclose(logFile);
         printf("Simulation finished successfully.\n");
-    } else {
+    } else{
+
         printf("Failed to open file for logging results.\n");
     }
 
@@ -200,7 +272,7 @@ void start_simulation_flow(SimConfig *config, Battleship *b, EscortShip customEs
 
 void main_menu(SimConfig *config, Battleship *b){
     int option = 0;
-    EscortShip tempEscorts[50];
+    EscortShip tempEscorts[MAX_ESCORTS] = {0};
 
     do {
         printf("||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||\n");
@@ -226,7 +298,7 @@ void main_menu(SimConfig *config, Battleship *b){
         switch(option) {
             case 1: 
                 setup(tempEscorts, b, config);
-                void start_simulation_flow(SimConfig *config, Battleship *b, EscortShip customEscorts[]);
+                start_simulation_flow(config, b, tempEscorts);
                 break;
             case 2:
                 view_instructions();

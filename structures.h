@@ -40,6 +40,7 @@ typedef struct {
     double angleMax;
     double impactPower;
     double gamma;
+    double health;
     int shotsFired;
     bool destroyed;
     double reloadTime; 

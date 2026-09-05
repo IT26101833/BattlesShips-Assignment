@@ -1,9 +1,9 @@
 #include <stdio.h>
-#include <stdlib.h>
 #include <string.h>
 #include <time.h>
 #include "structures.h"
 #include "ui.h"
+#include <stdlib.h>
 
 
 int main() {
