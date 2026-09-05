@@ -10,7 +10,75 @@
 #define PI 3.14159
 
 
-int selectTargetEscort(Battleship b, EscortShip escorts[], int numEscorts) {
+//function th run part 1 A
+int runPart1A(Battleship *b, EscortShip escorts[], int numEscorts, FILE *logFile){
+    int escortsRemaining = numEscorts;
+    int destroyerId = -1;
+    double shotTime = 0.0;
+
+  
+
+    for (int i = 0; i < numEscorts; i++) {
+        if (escorts[i].destroyed) continue;
+
+        double tof;
+        bool bCanHitE = canHitTarget(b->pos, escorts[i].pos, b->vMin, b->vMax,b->angleMin, b->angleMax, &tof);
+        if (!bCanHitE) continue;
+
+        
+        b->shotsFired++;
+        shotTime += 1.0; //one time unit per effective shot for the time-to-hit record
+        escorts[i].destroyed = true;
+        escortsRemaining--;
+
+        if (logFile) {
+            fprintf(logFile, "[t=%.1fs] Battleship hit Escort E%d with a single shot (Index=%d, Time-to-hit=%.1fs).\n", shotTime, escorts[i].id, escorts[i].id, shotTime);
+        }
+    }
+
+    
+    if (escortsRemaining > 0 && !b->destroyed) {
+        for (int i = 0; i < numEscorts; i++) {
+            if (escorts[i].destroyed) continue;
+
+            bool eCanHitB = canHitTarget(escorts[i].pos, b->pos, escorts[i].vMin, escorts[i].vMax, escorts[i].angleMin, escorts[i].angleMax, NULL);
+            if (eCanHitB) {
+                escorts[i].shotsFired++;
+                b->health = 0.0;
+                b->destroyed = true;
+                destroyerId = escorts[i].id;
+                shotTime += 1.0;
+                if (logFile){
+                    fprintf(logFile, "[t=%.1fs] Escort E%d hit the Battleship (single shot). B is DESTROYED.\n",
+                            shotTime, escorts[i].id);
+                }
+                break;
+            }
+        }
+    }
+
+    if (logFile) {
+        fprintf(logFile, "--- PART 1-A RESULT ---\n");
+        if (b->destroyed) {
+            fprintf(logFile, "Battleship sank. Sunk by Escort E%d. Duration=%.1fs.\n", destroyerId, shotTime);
+        } else {
+            fprintf(logFile, "Battleship survived. Escorts destroyed: %d/%d. Duration=%.1fs.\n",numEscorts - escortsRemaining, numEscorts, shotTime);
+        }
+    }
+
+    if (b->destroyed) {
+        printf("Part 1-A: Battleship was DESTROYED by Escort E%d after %.1fs.\n", destroyerId, shotTime);
+    } else {
+        printf("Part 1-A: Battleship SURVIVED. Escorts destroyed: %d/%d after %.1fs.\n", numEscorts - escortsRemaining, numEscorts, shotTime);
+    }
+
+    return b->destroyed ? 1 : 0;
+}
+
+
+
+int selectTargetEscort(Battleship b, EscortShip escorts[], int numEscorts){
+
     int targetIdx = -1;
     double maxImpact = -1.0;
 
@@ -21,8 +89,7 @@ int selectTargetEscort(Battleship b, EscortShip escorts[], int numEscorts) {
         bool bCanHitE = canHitTarget(b.pos, escorts[i].pos, b.vMin, b.vMax, b.angleMin, b.angleMax, &tof);
         if (!bCanHitE) continue;
 
-        bool eCanHitB = canHitTarget(escorts[i].pos, b.pos, escorts[i].vMin, escorts[i].vMax, 
-                                     escorts[i].angleMin, escorts[i].angleMax, NULL);
+        bool eCanHitB = canHitTarget(escorts[i].pos, b.pos, escorts[i].vMin, escorts[i].vMax, escorts[i].angleMin, escorts[i].angleMax, NULL);
 
         //calculating current impact of escortship
         double currentImpact = getDegradedImpact(escorts[i].impactPower, escorts[i].gamma, escorts[i].shotsFired);
@@ -73,7 +140,7 @@ void runfullSimulation(Battleship *b, EscortShip escorts[], int numEscorts, FILE
 
 
 
-                //damage the target: degradation means a ship may need several hits
+                //damage the target- degradation means a ship may need several hits
                 escorts[targetIdx].health -= currentBImpact;
                 if (escorts[targetIdx].health <= 0.0) {
                     escorts[targetIdx].destroyed = true;
@@ -92,7 +159,7 @@ void runfullSimulation(Battleship *b, EscortShip escorts[], int numEscorts, FILE
         }
 
         //escort ships firing 
-        for (int i = 0; i < numEscorts; i++) {
+        for (int i = 0; i < numEscorts; i++){
             if (escorts[i].destroyed) continue;
 
             if (currentTime >= escorts[i].nextFiringTime) {
@@ -127,16 +194,16 @@ void runfullSimulation(Battleship *b, EscortShip escorts[], int numEscorts, FILE
         currentTime += 0.5;
     }
 
-    if (logFile) {
+    if (logFile){
         fprintf(logFile, "--- SIMULATION END ---\nFinal Battleship Health: %.2f%%\nEscorts Destroyed: %d/%d\nDuration: %.2fs\n",
                 b->health > 0 ? b->health * 100.0 : 0.0, numEscorts - escortsRemaining, numEscorts, currentTime);
     }
 
     //display the result on the console too
-    if (b->destroyed) {
+    if (b->destroyed){
 
         printf("Battleship was DESTROYED by Escort E%d after %.2fs.\n", destroyerId, currentTime);
-    } else {
+    }else {
 
         printf("Battleship SURVIVED (health %.2f%%). Escorts destroyed: %d/%d over %.2fs.\n",
                b->health * 100.0, numEscorts - escortsRemaining, numEscorts, currentTime);
