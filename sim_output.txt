@@ -1,47 +1,47 @@
 --- INITIAL CONDITIONS ---
-Battleship: USS IOwa BB-61 (U) at (8.0, 15.0)
-  Vmin=20.0 Vmax=150.0, angles 10.0-45.0, impact=0.800, gamma=0.400, reload=5.0s
-Escort E1 (EA) at (750.0, 560.0): Vmin=50.0 Vmax=250.0, angles 10.0-60.0, impact=0.080, reload=2.0s
-Escort E2 (EC) at (499.0, 671.0): Vmin=50.0 Vmax=250.0, angles 10.0-60.0, impact=0.070, reload=3.0s
-Escort E3 (ED) at (152.0, 52.0): Vmin=50.0 Vmax=250.0, angles 10.0-60.0, impact=0.050, reload=3.5s
-Escort E4 (ED) at (948.0, 830.0): Vmin=50.0 Vmax=250.0, angles 10.0-60.0, impact=0.050, reload=3.5s
-Escort E5 (ED) at (356.0, 453.0): Vmin=50.0 Vmax=250.0, angles 10.0-60.0, impact=0.050, reload=3.5s
-Escort E6 (EE) at (562.0, 475.0): Vmin=50.0 Vmax=250.0, angles 10.0-60.0, impact=0.040, reload=4.0s
-Escort E7 (EA) at (698.0, 973.0): Vmin=50.0 Vmax=250.0, angles 10.0-60.0, impact=0.080, reload=2.0s
-Escort E8 (EA) at (803.0, 417.0): Vmin=50.0 Vmax=250.0, angles 10.0-60.0, impact=0.080, reload=2.0s
-Escort E9 (ED) at (270.0, 856.0): Vmin=50.0 Vmax=250.0, angles 10.0-60.0, impact=0.050, reload=3.5s
-Escort E10 (EC) at (163.0, 215.0): Vmin=50.0 Vmax=250.0, angles 10.0-60.0, impact=0.070, reload=3.0s
-Escort E11 (EB) at (338.0, 965.0): Vmin=50.0 Vmax=250.0, angles 10.0-60.0, impact=0.060, reload=2.5s
-Escort E12 (EB) at (178.0, 465.0): Vmin=50.0 Vmax=250.0, angles 10.0-60.0, impact=0.060, reload=2.5s
-Escort E13 (EA) at (523.0, 617.0): Vmin=50.0 Vmax=250.0, angles 10.0-60.0, impact=0.080, reload=2.0s
-Escort E14 (EC) at (831.0, 918.0): Vmin=50.0 Vmax=250.0, angles 10.0-60.0, impact=0.070, reload=3.0s
-Escort E15 (EE) at (476.0, 626.0): Vmin=50.0 Vmax=250.0, angles 10.0-60.0, impact=0.040, reload=4.0s
-Escort E16 (EC) at (771.0, 189.0): Vmin=50.0 Vmax=250.0, angles 10.0-60.0, impact=0.070, reload=3.0s
-Escort E17 (ED) at (388.0, 239.0): Vmin=50.0 Vmax=250.0, angles 10.0-60.0, impact=0.050, reload=3.5s
-Escort E18 (ED) at (928.0, 42.0): Vmin=50.0 Vmax=250.0, angles 10.0-60.0, impact=0.050, reload=3.5s
-Escort E19 (EA) at (259.0, 664.0): Vmin=50.0 Vmax=250.0, angles 10.0-60.0, impact=0.080, reload=2.0s
-Escort E20 (ED) at (696.0, 827.0): Vmin=50.0 Vmax=250.0, angles 10.0-60.0, impact=0.050, reload=3.5s
+Battleship: USS (U) at (20.0, 10.0)
+  Vmin=20.0 Vmax=50.0, angles 20.0-70.0, impact=0.600, gamma=0.010, reload=0.8s
+Escort E1 (EC) at (226.0, 294.0): Vmin=50.0 Vmax=250.0, angles 10.0-60.0, impact=0.070, reload=3.0s
+Escort E2 (EA) at (3.0, 581.0): Vmin=50.0 Vmax=250.0, angles 10.0-60.0, impact=0.080, reload=2.0s
+Escort E3 (EC) at (503.0, 238.0): Vmin=50.0 Vmax=250.0, angles 10.0-60.0, impact=0.070, reload=3.0s
+Escort E4 (EB) at (337.0, 423.0): Vmin=50.0 Vmax=250.0, angles 10.0-60.0, impact=0.060, reload=2.5s
+Escort E5 (EB) at (695.0, 623.0): Vmin=50.0 Vmax=250.0, angles 10.0-60.0, impact=0.060, reload=2.5s
+Escort E6 (EC) at (233.0, 245.0): Vmin=50.0 Vmax=250.0, angles 10.0-60.0, impact=0.070, reload=3.0s
+Escort E7 (EC) at (339.0, 682.0): Vmin=50.0 Vmax=250.0, angles 10.0-60.0, impact=0.070, reload=3.0s
+Escort E8 (ED) at (293.0, 502.0): Vmin=50.0 Vmax=250.0, angles 10.0-60.0, impact=0.050, reload=3.5s
+Escort E9 (ED) at (285.0, 837.0): Vmin=50.0 Vmax=250.0, angles 10.0-60.0, impact=0.050, reload=3.5s
+Escort E10 (EB) at (745.0, 953.0): Vmin=50.0 Vmax=250.0, angles 10.0-60.0, impact=0.060, reload=2.5s
+Escort E11 (EA) at (774.0, 531.0): Vmin=50.0 Vmax=250.0, angles 10.0-60.0, impact=0.080, reload=2.0s
+Escort E12 (EB) at (116.0, 887.0): Vmin=50.0 Vmax=250.0, angles 10.0-60.0, impact=0.060, reload=2.5s
+Escort E13 (EC) at (580.0, 390.0): Vmin=50.0 Vmax=250.0, angles 10.0-60.0, impact=0.070, reload=3.0s
+Escort E14 (EA) at (547.0, 79.0): Vmin=50.0 Vmax=250.0, angles 10.0-60.0, impact=0.080, reload=2.0s
+Escort E15 (EA) at (698.0, 775.0): Vmin=50.0 Vmax=250.0, angles 10.0-60.0, impact=0.080, reload=2.0s
+Escort E16 (ED) at (47.0, 360.0): Vmin=50.0 Vmax=250.0, angles 10.0-60.0, impact=0.050, reload=3.5s
+Escort E17 (EA) at (71.0, 51.0): Vmin=50.0 Vmax=250.0, angles 10.0-60.0, impact=0.080, reload=2.0s
+Escort E18 (EE) at (690.0, 344.0): Vmin=50.0 Vmax=250.0, angles 10.0-60.0, impact=0.040, reload=4.0s
+Escort E19 (EC) at (840.0, 981.0): Vmin=50.0 Vmax=250.0, angles 10.0-60.0, impact=0.070, reload=3.0s
+Escort E20 (EB) at (713.0, 78.0): Vmin=50.0 Vmax=250.0, angles 10.0-60.0, impact=0.060, reload=2.5s
 --- SIMULATION START ---
-[t=0.00s] Battleship fired shot #1 at Escort E1 (Hit! Damage=0.536, E1-health=46.37%)
-[t=0.00s] Escort E1 fired shot #1 at Battleship (Hit! Damage=7.92%, B-Health=92.08%)
-[t=0.00s] Escort E2 fired shot #1 at Battleship (Hit! Damage=6.93%, B-Health=85.15%)
-[t=0.00s] Escort E3 fired shot #1 at Battleship (Hit! Damage=4.95%, B-Health=80.20%)
-[t=0.00s] Escort E4 fired shot #1 at Battleship (Hit! Damage=4.95%, B-Health=75.25%)
-[t=0.00s] Escort E5 fired shot #1 at Battleship (Hit! Damage=4.95%, B-Health=70.30%)
-[t=0.00s] Escort E6 fired shot #1 at Battleship (Hit! Damage=3.96%, B-Health=66.34%)
-[t=0.00s] Escort E7 fired shot #1 at Battleship (Hit! Damage=7.92%, B-Health=58.42%)
-[t=0.00s] Escort E8 fired shot #1 at Battleship (Hit! Damage=7.92%, B-Health=50.50%)
-[t=0.00s] Escort E9 fired shot #1 at Battleship (Hit! Damage=4.95%, B-Health=45.55%)
-[t=0.00s] Escort E10 fired shot #1 at Battleship (Hit! Damage=6.93%, B-Health=38.62%)
-[t=0.00s] Escort E11 fired shot #1 at Battleship (Hit! Damage=5.94%, B-Health=32.68%)
-[t=0.00s] Escort E12 fired shot #1 at Battleship (Hit! Damage=5.94%, B-Health=26.74%)
-[t=0.00s] Escort E13 fired shot #1 at Battleship (Hit! Damage=7.92%, B-Health=18.82%)
-[t=0.00s] Escort E14 fired shot #1 at Battleship (Hit! Damage=6.93%, B-Health=11.89%)
-[t=0.00s] Escort E15 fired shot #1 at Battleship (Hit! Damage=3.96%, B-Health=7.93%)
-[t=0.00s] Escort E16 fired shot #1 at Battleship (Hit! Damage=6.93%, B-Health=1.00%)
-[t=0.00s] Escort E17 fired shot #1 at Battleship (Hit! Damage=4.95%, B-Health=-3.96%)
-[t=0.00s] BATTLESHIP DESTROYED!
+[t=0.00s] Battleship fired shot #1 at Escort E17 (Hit! Damage=0.594, E17-health=40.60%)
+[t=0.50s] Escort E12 fired shot #1 at Battleship (Hit! Damage=5.94%, B-Health=94.06%)
+[t=0.50s] Escort E15 fired shot #1 at Battleship (Hit! Damage=7.92%, B-Health=86.14%)
+[t=1.00s] Battleship fired shot #2 at Escort E17 (Destroyed! Impact=0.588)
+[t=1.00s] Escort E2 fired shot #1 at Battleship (Hit! Damage=7.92%, B-Health=78.22%)
+[t=1.00s] Escort E5 fired shot #1 at Battleship (Hit! Damage=5.94%, B-Health=72.28%)
+[t=1.00s] Escort E7 fired shot #1 at Battleship (Hit! Damage=6.93%, B-Health=65.35%)
+[t=1.00s] Escort E8 fired shot #1 at Battleship (Hit! Damage=4.95%, B-Health=60.40%)
+[t=1.50s] Escort E6 fired shot #1 at Battleship (Hit! Damage=6.93%, B-Health=53.47%)
+[t=1.50s] Escort E10 fired shot #1 at Battleship (Hit! Damage=5.94%, B-Health=47.53%)
+[t=1.50s] Escort E11 fired shot #1 at Battleship (Hit! Damage=7.92%, B-Health=39.61%)
+[t=1.50s] Escort E14 fired shot #1 at Battleship (Hit! Damage=7.92%, B-Health=31.69%)
+[t=2.00s] Escort E1 fired shot #1 at Battleship (Hit! Damage=6.93%, B-Health=24.76%)
+[t=2.00s] Escort E13 fired shot #1 at Battleship (Hit! Damage=6.93%, B-Health=17.83%)
+[t=2.00s] Escort E20 fired shot #1 at Battleship (Hit! Damage=5.94%, B-Health=11.89%)
+[t=2.50s] Escort E4 fired shot #1 at Battleship (Hit! Damage=5.94%, B-Health=5.95%)
+[t=2.50s] Escort E9 fired shot #1 at Battleship (Hit! Damage=4.95%, B-Health=1.00%)
+[t=2.50s] Escort E15 fired shot #2 at Battleship (Hit! Damage=7.84%, B-Health=-6.85%)
+[t=2.50s] BATTLESHIP DESTROYED!
 --- SIMULATION END ---
 Final Battleship Health: 0.00%
-Escorts Destroyed: 0/20
-Duration: 0.50s
+Escorts Destroyed: 1/20
+Duration: 3.00s

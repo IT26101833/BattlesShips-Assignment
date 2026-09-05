@@ -46,17 +46,16 @@ void runfullSimulation(Battleship *b, EscortShip escorts[], int numEscorts, FILE
     int destroyerId = -1;
 
     //save initial battlefield conditions to the log file
-    if (logFile) {
-
-
+    if (logFile){
         fprintf(logFile, "--- INITIAL CONDITIONS ---\n");
         fprintf(logFile, "Battleship: %s (%s) at (%.1f, %.1f)\n", b->typeName, b->typeNotation, b->pos.x, b->pos.y);
         fprintf(logFile, "  Vmin=%.1f Vmax=%.1f, angles %.1f-%.1f, impact=%.3f, gamma=%.3f, reload=%.1fs\n",
                 b->vMin, b->vMax, b->angleMin, b->angleMax, b->impactPower, b->gamma, b->reloadTime);
+
+
+
         for (int i = 0; i < numEscorts; i++) {
             fprintf(logFile, "Escort E%d (%s) at (%.1f, %.1f): Vmin=%.1f Vmax=%.1f, angles %.1f-%.1f, impact=%.3f, reload=%.1fs\n",
-
-
                     escorts[i].id, escorts[i].typeNotation, escorts[i].pos.x, escorts[i].pos.y,
                     escorts[i].vMin, escorts[i].vMax, escorts[i].angleMin, escorts[i].angleMax,
                     escorts[i].impactPower, escorts[i].reloadTime);
@@ -67,12 +66,12 @@ void runfullSimulation(Battleship *b, EscortShip escorts[], int numEscorts, FILE
     while (!b->destroyed && escortsRemaining > 0 && currentTime < 1000.0) {
         //battleship firing logic
         if (currentTime >= bNextShotTime) {
-
-
             int targetIdx = selectTargetEscort(*b, escorts, numEscorts);
             if (targetIdx != -1) {
                 b->shotsFired++;
                 double currentBImpact = getDegradedImpact(b->impactPower, b->gamma, b->shotsFired);
+
+
 
                 //damage the target: degradation means a ship may need several hits
                 escorts[targetIdx].health -= currentBImpact;
@@ -98,7 +97,6 @@ void runfullSimulation(Battleship *b, EscortShip escorts[], int numEscorts, FILE
 
             if (currentTime >= escorts[i].nextFiringTime) {
                 double tof;
-
                 if (canHitTarget(escorts[i].pos, b->pos, escorts[i].vMin, escorts[i].vMax, 
                                  escorts[i].angleMin, escorts[i].angleMax, &tof)) {
                     
@@ -106,13 +104,12 @@ void runfullSimulation(Battleship *b, EscortShip escorts[], int numEscorts, FILE
                     double currentEImpact = getDegradedImpact(escorts[i].impactPower, escorts[i].gamma, escorts[i].shotsFired);
                     b->health -= currentEImpact;
 
-
-
-
                     if (logFile) {
                         fprintf(logFile, "[t=%.2fs] Escort E%d fired shot #%d at Battleship (Hit! Damage=%.2f%%, B-Health=%.2f%%)\n",
                                 currentTime, escorts[i].id, escorts[i].shotsFired, currentEImpact * 100.0, b->health * 100.0);
                     }
+
+
                     if (b->health <= 0.0) {
                         b->destroyed = true;
                         destroyerId = escorts[i].id;
@@ -120,6 +117,8 @@ void runfullSimulation(Battleship *b, EscortShip escorts[], int numEscorts, FILE
                         break;
                     }
                 }
+
+
                 escorts[i].nextFiringTime = currentTime + escorts[i].reloadTime;
             }
         }
@@ -129,13 +128,9 @@ void runfullSimulation(Battleship *b, EscortShip escorts[], int numEscorts, FILE
     }
 
     if (logFile) {
-
         fprintf(logFile, "--- SIMULATION END ---\nFinal Battleship Health: %.2f%%\nEscorts Destroyed: %d/%d\nDuration: %.2fs\n",
                 b->health > 0 ? b->health * 100.0 : 0.0, numEscorts - escortsRemaining, numEscorts, currentTime);
     }
-
-
-
 
     //display the result on the console too
     if (b->destroyed) {
@@ -144,7 +139,6 @@ void runfullSimulation(Battleship *b, EscortShip escorts[], int numEscorts, FILE
     } else {
 
         printf("Battleship SURVIVED (health %.2f%%). Escorts destroyed: %d/%d over %.2fs.\n",
-            
                b->health * 100.0, numEscorts - escortsRemaining, numEscorts, currentTime);
     }
 }

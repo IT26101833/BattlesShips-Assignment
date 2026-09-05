@@ -135,12 +135,53 @@ void initial_settingsForES(EscortShip escorts[], int *numEscorts, double gridSiz
 }
 
 void view_instructions(void){
-    printf("\n====================================================================================\n");
     printf("-----------------------------------INSTRUCTIONS-------------------------------------\n");
-    printf("1. Battleship (B) fires every reload interval at detected escort targets.\n");
-    printf("2. Escort ships (E) counter-attack when the battleship enters their range.\n");
-    printf("3. Projectile hits use parabolic motion equations.\n");
-    printf("4. Shell impact power degrades using IP_n = IP_0 * e^(-gamma * n).\n");
+    printf("------------------------------------------------------------------------------------\n");
+
+
+    printf("------------------------------------------------------------------------------------\n");
+    printf("MAIN MENU OPTIONS\n");
+    printf("  1. Start Simulation  = open the Setup menu, then run a battle\n");
+    printf("  2. View Instructions = show this help screen\n");
+    printf("  3. Simulation Stats  = read the last saved results (sim_output.txt)\n");
+    printf("  4. Exit              = close the program\n");
+
+    printf("------------------------------------------------------------------------------------\n");
+    printf("SETUP MENU OPTIONS\n");
+    printf("  1. Battleship Properties  = set the values that control the battleship\n");
+    printf("  2. Escort ship Properties = set how many escort ships take part\n");
+    printf("  3. Seed value             = set the random generator and canvas size (D)\n");
+    printf("  4. Return to main menu    = close this menu; the battle then starts\n");
+
+    printf("------------------------------------------------------------------------------------\n");
+    printf("BATTLESHIP SETTINGS AND ALLOWED RANGES\n");
+    printf("  Name            : any text (e.g. 'USS Iowa BB-61')\n");
+    printf("  Notation        : U, M, R or S\n");
+    printf("  Position X, Y   : 0 to D (must be in the given range)\n");
+    printf("  Min Velocity    : 0 to 5000.00\n");
+    printf("  Max Velocity    : 0 to 5000.00 (must be greater than Min Velocity)\n");
+    printf("  Min/Max Angle   : 0 to 90.00 degrees (Max must be greater than Min angle)\n");
+    printf("  Impact Power    : 0 to 1.00 (damage dealt by the battleship)\n");
+    printf("  Gamma           : 0 to 1.00 (how fast shell power degrades)\n");
+    printf("  Reload Time     : 0.10 to 60.00 seconds between shots\n");
+    printf("  Entering a value outside a range shows an 'Out of range' message.\n");
+    printf("------------------------------------------------------------------------------------\n");
+    printf("ESCORT SHIP SETTINGS\n");
+    printf("  Number of escorts : 1 to 50. Their type, position, velocity, angles,\n");
+    printf("  impact power and reload time are all generated randomly\n");
+    printf("  There are 5 types (EA to EE) with different impact powers (0.04 to 0.08).\n");
+    printf("------------------------------------------------------------------------------------\n");
+    printf("SEED VALUE SETTINGS\n");
+    printf("  Seed       : a number (0 - 4294967295) used to generate random values.\n");
+    printf("  Grid Size D: 1.00 to 100000.00. The canvas is a square with corners\n");
+    printf("               (0, 0) and (D, D)\n");
+    printf("------------------------------------------------------------------------------------\n");
+
+    printf("AFTER THE BATTLE\n");
+    printf("  If B sinks, the index of the escort that sank it is shown.\n");
+    printf("  If B survives, the number of escorts destroyed and the battle duration\n");
+    printf("  are shown. The full log (initial conditions + every shot) is saved to\n");
+    printf("  sim_output.txt and can be viewed from 'Simulation Statistics'.\n");
     printf("====================================================================================\n");
 }
 
@@ -161,19 +202,19 @@ void view_statistics(void){
 void setup(EscortShip escorts[], Battleship *b, SimConfig *config){
     int option = 0;
     do {
-        printf("||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||\n");
-        printf("||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||\n");
-        printf("------------------------------------------------------------------------------------\n");
-        printf("====================================================================================\n");
-        printf("====================++++++++++++++++SETUP MENU+++++++++++++++=======================\n");
-        printf("====================++++++++1.) Battleship Properties++++++++=======================\n");
-        printf("====================++++++++2.) Escort ship Properties+++++++=======================\n");
-        printf("=====================+++++++++++++3.) Seed Value++++++++++++++======================\n");
-        printf("====================++++++++4.) Return to main menu++++++++++=======================\n");
-        printf("====================================================================================\n");
-        printf("------------------------------------------------------------------------------------\n");
-        printf("||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||\n");
-        printf("||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||\n");
+        printf("************************************************************************************\n");
+        printf("*                                                                                  *\n");
+        printf("*                                                                                  *\n");
+        printf("*                                                                                  *\n");
+        printf("*                   +++++++++++++++SETUP MENU+++++++++++++++                       *\n");
+        printf("*                   +++++++1.) Battleship Properties++++++++                       *\n");
+        printf("*                   +++++++2.) Escort ship Properties+++++++                       *\n");
+        printf("*                   +++++++++++++3.) Seed Value+++++++++++++                       *\n");
+        printf("*                   +++++++++4.) Return to main menu++++++++                       *\n");
+        printf("*                                                                                  *\n");
+        printf("*                                                                                  *\n");
+        printf("*                                                                                  *\n");
+        printf("************************************************************************************\n");
         printf("Enter option: ");
         if (scanf("%d", &option) != 1) break;
 
@@ -203,13 +244,14 @@ void setup(EscortShip escorts[], Battleship *b, SimConfig *config){
     } while(option != 4);
 }
 
+//function to start the simulation
 void start_simulation_flow(SimConfig *config, Battleship *b, EscortShip customEscorts[]){
     //guard against more escorts than the stored array can hold
     if (config->numEscorts < 1) config->numEscorts = 1;
     if (config->numEscorts > MAX_ESCORTS) config->numEscorts = MAX_ESCORTS;
 
     EscortShip *escorts = malloc(sizeof(EscortShip) * config->numEscorts);
-    if (!escorts){
+    if (!escorts) {
         printf("Memory allocation failed!\n");
         return;
     }
@@ -243,27 +285,26 @@ void start_simulation_flow(SimConfig *config, Battleship *b, EscortShip customEs
             escorts[i].shotsFired = 0;
             escorts[i].destroyed = false;
             escorts[i].reloadTime = 2.0 + (typeIdx * 0.5);
-            escorts[i].nextFiringTime = 0.0;
+            escorts[i].nextFiringTime = (double)(rand() % 101) / 100.0 * escorts[i].reloadTime;
         }
     }
 
-    //reset per-run state so ships start each simulation fresh
+    //reset per each run
     for (int i = 0; i < config->numEscorts; i++) {
         escorts[i].health = 1.0;
         escorts[i].destroyed = false;
         escorts[i].shotsFired = 0;
-        escorts[i].nextFiringTime = 0.0;
+        //random aim delay before the first shot
+        escorts[i].nextFiringTime = (double)(rand() % 101) / 100.0 * escorts[i].reloadTime;
     }
 
     FILE *logFile = fopen("sim_output.txt", "w");
     if (logFile) {
-
         printf("\nExecuting Simulation... Results outputting to sim_output.txt\n");
         runfullSimulation(b, escorts, config->numEscorts, logFile);
         fclose(logFile);
         printf("Simulation finished successfully.\n");
-    } else{
-
+    } else {
         printf("Failed to open file for logging results.\n");
     }
 
@@ -275,23 +316,23 @@ void main_menu(SimConfig *config, Battleship *b){
     EscortShip tempEscorts[MAX_ESCORTS] = {0};
 
     do {
-        printf("||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||\n");
-        printf("||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||\n");
-        printf("------------------------------------------------------------------------------------\n");
-        printf("------------------------------------------------------------------------------------\n");
-        printf("------------------------------------------------------------------------------------\n");
-        printf("****************************ADVANCED NAVAL SIMULATOR********************************\n");
         printf("************************************************************************************\n");
-        printf("------------------------------------MAIN MENU---------------------------------------\n");
-        printf("------------------------------1.) Start Simulation----------------------------------\n");
-        printf("-----------------------------2.) View Instructions----------------------------------\n");
-        printf("---------------------------3.) Simulation Statistics--------------------------------\n");
-        printf("-------------------------------------4.) Exit---------------------------------------\n");
+        printf("*                                                                                  *\n");
+        printf("*                                                                                  *\n");
+        printf("*                                                                                  *\n");
+        printf("*                                                                                  *\n");
+        printf("*                           ADVANCED NAVAL SIMULATOR                               *\n");
+        printf("*                                                                                  *\n");
+        printf("*-----------------------------------MAIN MENU--------------------------------------*\n");
+        printf("*-----------------------------1.) Start Simulation---------------------------------*\n");
+        printf("*----------------------------2.) View Instructions---------------------------------*\n");
+        printf("*--------------------------3.) Simulation Statistics-------------------------------*\n");
+        printf("*------------------------------------4.) Exit--------------------------------------*\n");
+        printf("*                                                                                  *\n");
+        printf("*                                                                                  *\n");
+        printf("*                                                                                  *\n");
+        printf("*                                                                                  *\n");
         printf("************************************************************************************\n");
-        printf("************************************************************************************\n");
-        printf("************************************************************************************\n");
-        printf("||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||\n");
-        printf("||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||\n");
         printf("Enter an option: ");
         if (scanf("%d", &option) != 1) break;
 
