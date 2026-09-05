@@ -9,6 +9,7 @@
 //triggering the simulatoin
 void runfullSimulation(Battleship *b, EscortShip escorts[], int numEscorts, FILE *logFile);
 
+//draw the canvas for game
 int board_draw_input(void){
     int grid_value;
     printf("Enter the grid value: ");
@@ -63,9 +64,13 @@ void initial_settingsForBS(Battleship *b, double gridSize){
     printf("Enter Battleship Notation (e.g., U): ");
     scanf("%4s", b->typeNotation);
 
+
+    //getting the battleship starting position
     b->pos.x = readInRange("Enter Battleship starting position X", 0.0, gridSize);
     b->pos.y = readInRange("Enter Battleship starting position Y", 0.0, gridSize);
 
+
+    //geting the battleship min velocity
     b->vMin = readInRange("Enter Min Velocity", 0.0, 5000.0);
     do {
         b->vMax = readInRange("Enter Max Velocity", 0.0, 5000.0);
@@ -133,7 +138,7 @@ void initial_settingsForES(EscortShip escorts[], int *numEscorts, double gridSiz
 
 
 }
-
+//function to view instructions
 void view_instructions(void){
     printf("-----------------------------------INSTRUCTIONS-------------------------------------\n");
     printf("------------------------------------------------------------------------------------\n");

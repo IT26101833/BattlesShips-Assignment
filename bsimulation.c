@@ -24,7 +24,7 @@ int selectTargetEscort(Battleship b, EscortShip escorts[], int numEscorts) {
         bool eCanHitB = canHitTarget(escorts[i].pos, b.pos, escorts[i].vMin, escorts[i].vMax, 
                                      escorts[i].angleMin, escorts[i].angleMax, NULL);
 
-        //calculating current mpact of escortship
+        //calculating current impact of escortship
         double currentImpact = getDegradedImpact(escorts[i].impactPower, escorts[i].gamma, escorts[i].shotsFired);
 
         

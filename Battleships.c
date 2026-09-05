@@ -6,10 +6,15 @@
 #include <stdlib.h>
 
 
-int main() {
+int main(){
+
+
+
     SimConfig config = {1000.0, (unsigned int)time(NULL), 10};
     srand(config.seed);
 
+
+    //initializing a battleship
     Battleship b;
     strcpy(b.typeName, "USS Iowa BB-61");
     strcpy(b.typeNotation, "U");
