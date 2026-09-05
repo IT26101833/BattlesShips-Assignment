@@ -150,34 +150,39 @@ void setup(EscortShip escorts[], Battleship *b, SimConfig *config){
     } while(option != 4);
 }
 
-void start_simulation_flow(SimConfig *config, Battleship *b){
+void start_simulation_flow(SimConfig *config, Battleship *b, EscortShip customEscorts[]){
     EscortShip *escorts = malloc(sizeof(EscortShip) * config->numEscorts);
     if (!escorts) {
         printf("Memory allocation failed!\n");
         return;
     }
 
-    //initial notation for run
-    const char *types[] = {"EA", "EB", "EC", "ED", "EE"};
-    double baseImpacts[] = {0.08, 0.06, 0.07, 0.05, 0.04};
-
+    //copy user desired configurations or genreate randomely
     for (int i = 0; i < config->numEscorts; i++) {
-        escorts[i].id = i + 1;
-        int typeIdx = rand() % 5;
-        strcpy(escorts[i].typeNotation, types[typeIdx]);
-        sprintf(escorts[i].typeName, "Escort-%s-%d", types[typeIdx], i + 1);
-        escorts[i].pos.x = (double)(rand() % (int)config->battlefieldSize);
-        escorts[i].pos.y = (double)(rand() % (int)config->battlefieldSize);
-        escorts[i].vMin = 50.0;
-        escorts[i].vMax = 250.0;
-        escorts[i].angleMin = 10.0;
-        escorts[i].angleMax = 60.0;
-        escorts[i].impactPower = baseImpacts[typeIdx];
-        escorts[i].gamma = 0.01;
-        escorts[i].shotsFired = 0;
-        escorts[i].destroyed = false;
-        escorts[i].reloadTime = 2.0 + (typeIdx * 0.5);
-        escorts[i].nextFiringTime = 0.0;
+        if (customEscorts[i].id != 0) {
+            escorts[i] = customEscorts[i];
+        } else {
+            //random generation logic
+            const char *types[] = {"EA", "EB", "EC", "ED", "EE"};
+            double baseImpacts[] = {0.08, 0.06, 0.07, 0.05, 0.04};
+            
+            escorts[i].id = i + 1;
+            int typeIdx = rand() % 5;
+            strcpy(escorts[i].typeNotation, types[typeIdx]);
+            sprintf(escorts[i].typeName, "Escort-%s-%d", types[typeIdx], i + 1);
+            escorts[i].pos.x = (double)(rand() % (int)config->battlefieldSize);
+            escorts[i].pos.y = (double)(rand() % (int)config->battlefieldSize);
+            escorts[i].vMin = 50.0;
+            escorts[i].vMax = 250.0;
+            escorts[i].angleMin = 10.0;
+            escorts[i].angleMax = 60.0;
+            escorts[i].impactPower = baseImpacts[typeIdx];
+            escorts[i].gamma = 0.01;
+            escorts[i].shotsFired = 0;
+            escorts[i].destroyed = false;
+            escorts[i].reloadTime = 2.0 + (typeIdx * 0.5);
+            escorts[i].nextFiringTime = 0.0;
+        }
     }
 
     FILE *logFile = fopen("sim_output.txt", "w");
@@ -220,7 +225,8 @@ void main_menu(SimConfig *config, Battleship *b){
 
         switch(option) {
             case 1: 
-                start_simulation_flow(config, b);
+                setup(tempEscorts, b, config);
+                void start_simulation_flow(SimConfig *config, Battleship *b, EscortShip customEscorts[]);
                 break;
             case 2:
                 view_instructions();

@@ -1,0 +1,23 @@
+--- SIMULATION START ---
+[t=0.00s] Battleship fired shot #1 at Escort E1 (Destroyed! Impact=0.490)
+[t=0.00s] Escort E2 fired shot #1 at Battleship (Hit! Damage=3.96%, B-Health=96.04%)
+[t=0.00s] Escort E3 fired shot #1 at Battleship (Hit! Damage=6.93%, B-Health=89.11%)
+[t=0.00s] Escort E4 fired shot #1 at Battleship (Hit! Damage=5.94%, B-Health=83.17%)
+[t=0.00s] Escort E5 fired shot #1 at Battleship (Hit! Damage=7.92%, B-Health=75.25%)
+[t=0.00s] Escort E6 fired shot #1 at Battleship (Hit! Damage=7.92%, B-Health=67.33%)
+[t=0.00s] Escort E7 fired shot #1 at Battleship (Hit! Damage=3.96%, B-Health=63.37%)
+[t=0.00s] Escort E8 fired shot #1 at Battleship (Hit! Damage=4.95%, B-Health=58.42%)
+[t=0.00s] Escort E9 fired shot #1 at Battleship (Hit! Damage=6.93%, B-Health=51.49%)
+[t=0.00s] Escort E10 fired shot #1 at Battleship (Hit! Damage=6.93%, B-Health=44.56%)
+[t=2.00s] Escort E5 fired shot #2 at Battleship (Hit! Damage=7.84%, B-Health=36.72%)
+[t=2.00s] Escort E6 fired shot #2 at Battleship (Hit! Damage=7.84%, B-Health=28.87%)
+[t=2.50s] Escort E4 fired shot #2 at Battleship (Hit! Damage=5.88%, B-Health=22.99%)
+[t=3.00s] Escort E3 fired shot #2 at Battleship (Hit! Damage=6.86%, B-Health=16.13%)
+[t=3.00s] Escort E9 fired shot #2 at Battleship (Hit! Damage=6.86%, B-Health=9.27%)
+[t=3.00s] Escort E10 fired shot #2 at Battleship (Hit! Damage=6.86%, B-Health=2.41%)
+[t=3.50s] Escort E8 fired shot #2 at Battleship (Hit! Damage=4.90%, B-Health=-2.49%)
+[t=3.50s] BATTLESHIP DESTROYED!
+--- SIMULATION END ---
+Final Battleship Health: 0.00%
+Escorts Destroyed: 1/10
+Duration: 4.00s
