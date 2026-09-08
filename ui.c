@@ -193,17 +193,51 @@ void view_instructions(void){
 }
 
 void view_statistics(void){
-    printf("\n--- SIMULATION STATISTICS ---\n");
-    FILE *logFile = fopen("sim_output.txt", "r");
+    printf("\n==================== SIMULATION STATISTICS ====================\n");
+ //read main simulation output file
+   FILE *logFile = fopen("sim_output.txt", "r");
     if (logFile) {
+        printf("\n--- MAIN OUTPUT (sim_output.txt) ---\n");
         char ch;
         while ((ch = fgetc(logFile)) != EOF) {
             putchar(ch);
         }
         fclose(logFile);
     } else {
+        printf("No standard output found (sim_output.txt).\n");
+    }
+
+    //read Part 1-B iteration logs
+    const char *prefixes[] = {"sim_path", "sim_jam", "simC_path", "simC_jam"};
+    int total_files_found = 0;
+
+    for (int p = 0; p < 4; p++) {
+        int iter = 1;
+        while (1) {
+            char filename[256];
+            snprintf(filename, sizeof(filename), "%s_part1B_iter%d.txt", prefixes[p], iter);
+
+            FILE *bFile = fopen(filename, "r");
+            if (!bFile) {
+                break; //stop checking when no more iteration files exist
+            }
+
+            printf("\n--- PART 1-B LOG: %s ---\n", filename);
+            char ch;
+            while ((ch = fgetc(bFile)) != EOF) {
+                putchar(ch);
+            }
+            fclose(bFile);
+            
+            iter++;
+            total_files_found++;
+        }
+    }
+
+    if (!logFile && total_files_found == 0) {
         printf("No past simulation statistics found. Run a simulation first.\n");
     }
+    printf("===============================================================\n");
 }
 
 void setup(EscortShip escorts[], Battleship *b, SimConfig *config){
