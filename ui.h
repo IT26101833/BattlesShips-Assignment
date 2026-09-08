@@ -6,7 +6,7 @@
 int board_draw_input(void);
 void draw_board(int Grid_Value);
 void initial_settingsForBS(Battleship *b, double gridSize);
-void initial_settingsForES(EscortShip escorts[], int *numEscorts, double gridSize);
+void initial_settingsForES(EscortShip escorts[], int *numEscorts, double gridSize, double bVMax);
 void view_instructions(void);
 void view_statistics(void);
 void setup(EscortShip escorts[], Battleship *b, SimConfig *config);

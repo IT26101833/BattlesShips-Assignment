@@ -4,6 +4,7 @@
 #include "structures.h"
 #include "ui.h"
 #include <stdlib.h>
+#include <stdbool.h>
 
 
 int main(){
@@ -20,16 +21,16 @@ int main(){
     strcpy(b.typeNotation, "U");
     b.pos.x = 500.0;
     b.pos.y = 500.0;
-    b.vMin = 100.0;
-    b.vMax = 400.0;
-    b.angleMin = 0.0;
-    b.angleMax = 90.0;
+    b.vMin = 40.0;
+    b.vMax = 120.0;
+    b.angleMin = 5.0;
+    b.angleMax = 85.0;
     b.impactPower = 0.5;
     b.gamma = 0.02;
     b.shotsFired = 0;
     b.health = 1.0;
     b.destroyed = false;
-    b.reloadTime = 5.0;
+    b.reloadTime = 3.0;
 
     main_menu(&config, &b);
     
