@@ -19,6 +19,7 @@ int main(){
     Battleship b;
     strcpy(b.typeName, "USS Iowa BB-61");
     strcpy(b.typeNotation, "U");
+    
     b.pos.x = 500.0;
     b.pos.y = 500.0;
     b.vMin = 40.0;

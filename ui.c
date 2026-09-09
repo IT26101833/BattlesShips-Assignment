@@ -2,13 +2,11 @@
 #include <stdlib.h>
 #include <string.h>
 #include "ui.h"
-#include "bsimulation.h"
+#include "part1_ui.h"
+#include "part2_ui.h"
 #include "structures.h"
 
 #define MAX_ESCORTS 50
-
-//triggering the simulatoin
-void runfullSimulation(Battleship *b, EscortShip escorts[], int numEscorts, FILE *logFile);
 
 //randomly generate the escort ship settings
 static void generateEscortProperties(EscortShip *e, int typeIdx, double gridSize, double bVMax);
@@ -17,14 +15,15 @@ static void generateEscortProperties(EscortShip *e, int typeIdx, double gridSize
 int board_draw_input(void){
     int grid_value;
     printf("Enter the grid value: ");
+
     if (scanf("%d", &grid_value) != 1) return 1000;
     return grid_value;
 }
 
 //drawing the board
 void draw_board(int Grid_Value){
-    for (int i = 0; i < Grid_Value; i++) {
-        for (int j = 0; j < Grid_Value; j++) {
+    for(int i = 0; i < Grid_Value; i++) {
+        for(int j = 0; j < Grid_Value; j++) {
             printf("|");
         }
         printf(" ");
@@ -33,22 +32,25 @@ void draw_board(int Grid_Value){
 }
 
 //reads a number and keeps asking until it is inside the allowed range
-static double readInRange(const char *prompt, double min, double max){
+double readInRange(const char *prompt, double min, double max){
     double value;
     int c;
 
-    do {
+    do{
         printf("%s (%.2f - %.2f): ", prompt, min, max);
 
-        if (scanf("%lf", &value) != 1){
-            do { c = getchar(); } while (c != '\n' && c != EOF); //clear the invalid input
+        if(scanf("%lf", &value) != 1){
+            do{ 
+                c = getchar(); 
+            } while (c != '\n' && c != EOF); //clear the invalid input
             printf("Invalid input. Please enter a number.\n");
 
+
             value = min - 1.0;
-        } else if (value < min || value > max) {
+        }else if(value < min || value > max) {
             printf("Out of range. Allowed range is %.2f to %.2f.\n", min, max);
         }
-    } while (value < min || value > max);
+     }while(value < min || value > max);
 
     return value;
 }
@@ -87,7 +89,8 @@ void initial_settingsForBS(Battleship *b, double gridSize){
     b->angleMin = readInRange("Enter Min Angle (degrees)", 0.0, 90.0);
     do{
         b->angleMax = readInRange("Enter Max Angle (degrees)", 0.0, 90.0);
-        if (b->angleMax <= b->angleMin) {
+        if (b->angleMax <= b->angleMin){
+
             printf("Out of range. Max Angle must be greater than Min Angle (%.2f).\n", b->angleMin);
         }
     } while (b->angleMax <= b->angleMin);
@@ -178,14 +181,19 @@ void view_instructions(void){
     printf("              optional gun jamming after t iterations, 0<theta<30)\n");
     printf("    Part 1-C : E ships deal partial damage (impact power), B still\n");
     printf("              destroys any E ship with one shell\n");
-    printf("    Part 2   : combined - reload times (T_B, T_E), continuous fire,\n");
+    printf("    Part 2-A : B reload time (T_B) between firings + a threat-based\n");
+    printf("              attack-order strategy; E ships still fire only once\n");
+    printf("    Part 2-B : E ships also fire continuously (per-type T_E reload);\n");
+    printf("              B keeps its reload time and attack-order strategy\n");
+    printf("    Part 2-C : combined - reload times (T_B, T_E), continuous fire,\n");
     printf("              impact-power degradation (IP = IP0*e^-gamma*n)\n");
     printf("  If B sinks, the index of the escort that sank it is shown.\n");
     printf("  If B survives, the number of escorts destroyed and the battle duration\n");
-    printf("  are shown. The full log (initial conditions + every shot) is saved to\n");
-    printf("  sim_output.txt and can be viewed from 'Simulation Statistics'. Part 1-B\n");
-    printf("  saves one log file per iteration (sim_path_part1B_iter*.txt / sim_jam*\n");
-    printf("  simC_path* / simC_jam*).\n");
+    printf("  are shown. The full log (initial conditions + every shot + B's attack\n");
+    printf("  order) is saved to sim_output.txt / sim2A_output.txt / sim2B_output.txt\n");
+    printf("  and can be viewed from 'Simulation Statistics'. Part 1-B saves one\n");
+    printf("  log file per iteration (sim_path_part1B_iter*.txt / sim_jam* / simC_*\n");
+    printf("  sim2A_path_iter*.txt / sim2B_path_iter*.txt).\n");
     printf("  IMPORTANT: velocities are shell muzzle velocities in m/s. Pick a canvas\n");
     printf("  size D and velocities so that the gun ranges (v^2/g) overlap the canvas\n");
     printf("  - otherwise ships cannot reach each other and no battle occurs.\n");
@@ -194,31 +202,18 @@ void view_instructions(void){
 
 void view_statistics(void){
     printf("\n==================== SIMULATION STATISTICS ====================\n");
- //read main simulation output file
-   FILE *logFile = fopen("sim_output.txt", "r");
-    if (logFile) {
-        printf("\n--- MAIN OUTPUT (sim_output.txt) ---\n");
-        char ch;
-        while ((ch = fgetc(logFile)) != EOF) {
-            putchar(ch);
-        }
-        fclose(logFile);
-    } else {
-        printf("No standard output found (sim_output.txt).\n");
-    }
-
-    //read Part 1-B iteration logs
-    const char *prefixes[] = {"sim_path", "sim_jam", "simC_path", "simC_jam"};
     int total_files_found = 0;
 
-    for (int p = 0; p < 4; p++) {
+    //read Part 1-B iteration logs (sim_path / sim_jam / simC_path / simC_jam)
+    const char *prefixes[] = {"sim_path", "sim_jam", "simC_path", "simC_jam"};
+    for(int p = 0; p < 4; p++){
         int iter = 1;
-        while (1) {
+        while(1) {
             char filename[256];
             snprintf(filename, sizeof(filename), "%s_part1B_iter%d.txt", prefixes[p], iter);
 
             FILE *bFile = fopen(filename, "r");
-            if (!bFile) {
+            if(!bFile) {
                 break; //stop checking when no more iteration files exist
             }
 
@@ -228,13 +223,53 @@ void view_statistics(void){
                 putchar(ch);
             }
             fclose(bFile);
-            
+
             iter++;
             total_files_found++;
         }
     }
 
-    if (!logFile && total_files_found == 0) {
+    //read Part 2 path iteration logs (sim2A_path / sim2B_path)
+    const char *part2Prefixes[] = {"sim2A_path_iter", "sim2B_path_iter"};
+    for (int p = 0; p < 2; p++) {
+        int iter = 1;
+        while (1) {
+            char filename[256];
+            snprintf(filename, sizeof(filename), "%s%d.txt", part2Prefixes[p], iter);
+
+            FILE *bFile = fopen(filename, "r");
+            if (!bFile) {
+                break;
+            }
+
+            printf("\n--- PART 2 PATH LOG: %s ---\n", filename);
+            char ch;
+            while ((ch = fgetc(bFile)) != EOF) {
+                putchar(ch);
+            }
+            fclose(bFile);
+
+            iter++;
+            total_files_found++;
+        }
+    }
+
+    //read single-position output files from all parts
+    const char *mainFiles[] = {"sim_output.txt", "sim2A_output.txt", "sim2B_output.txt"};
+    for (int m = 0; m < 3; m++) {
+        FILE *pFile = fopen(mainFiles[m], "r");
+        if (pFile) {
+            printf("\n--- %s ---\n", mainFiles[m]);
+            char ch;
+            while ((ch = fgetc(pFile)) != EOF) {
+                putchar(ch);
+            }
+            fclose(pFile);
+            total_files_found++;
+        }
+    }
+
+    if(total_files_found == 0) {
         printf("No past simulation statistics found. Run a simulation first.\n");
     }
     printf("===============================================================\n");
@@ -274,6 +309,7 @@ void setup(EscortShip escorts[], Battleship *b, SimConfig *config){
 
                 scanf("%u", &config->seed);
                 srand(config->seed);
+
                 config->battlefieldSize = readInRange("Enter Grid Size (D)", 1.0, 100000.0);
                 break;
             case 4:
@@ -330,135 +366,20 @@ void start_simulation_flow(SimConfig *config, Battleship *b, EscortShip customEs
     printf("  1.) Part 1-A  (instant reload, single shot destroys any ship)\n");
     printf("  2.) Part 1-B  (battleship moves along a random k-point path)\n");
     printf("  3.) Part 1-C  (B still one-shots E; E ships only deal partial damage)\n");
-    printf("  4.) Part 2 combined (reload times, continuous fire, impact degradation)\n");
-    printf("Enter option: ");
+    printf("  4.) Part 2-A  (T_B reload + B attack-order strategy; E still fires once)\n");
+    printf("  5.) Part 2-B  (T_B and T_E reloads; B and E fire continuously)\n");
+    printf("  6.) Part 2-C  (combined: reload times, continuous fire, impact degradation)\n");
+
+printf("Enter option: ");
     int part = 0;
     scanf("%d", &part);
 
-    if (part == 1) {
-        FILE *logFile = fopen("sim_output.txt", "w");
-        if (logFile) {
-            fprintf(logFile, "--- PART 1-A: INITIAL CONDITIONS ---\n");
-            fprintf(logFile, "Battleship: %s (%s) at (%.1f, %.1f) Vmax=%.1f Vmin=%.1f "
-                             "angles %.1f-%.1f\n",
-                    b->typeName, b->typeNotation, b->pos.x, b->pos.y, b->vMax, b->vMin,
-                    b->angleMin, b->angleMax);
-            for (int i = 0; i < config->numEscorts; i++){
-
-
-                fprintf(logFile, "Escort E%d (%s) at (%.1f, %.1f): Vmin=%.1f Vmax=%.1f "
-                                 "angles %.1f-%.1f type=%s\n",
-                        escorts[i].id, escorts[i].typeNotation, escorts[i].pos.x,
-                        escorts[i].pos.y, escorts[i].vMin, escorts[i].vMax,
-                        escorts[i].angleMin, escorts[i].angleMax, escorts[i].typeName);
-            }
-            printf("\nExecuting Part 1-A simulation...\n");
-            int sinker = -1;
-
-            runPart1A(b, escorts, config->numEscorts, logFile, false, &sinker);
-            fclose(logFile);
-
-            printf("Part 1-A finished. Results saved to sim_output.txt\n");
-        } else{
-
-            printf("Failed to open file for logging results.\n");
-        }
-    } else if (part == 2) {
-        int k = 0;
-        printf("Enter the number of path points (k): ");
-        scanf("%d", &k);
-        if (k < 1) k = 1;
-
-        printf("Run with gun jamming (Simulation 2 - 0<theta<30)? (1=yes, 0=no): ");
-        int jam = 0;
-        scanf("%d", &jam);
-
-        double jamAngle = 0.0;
-        int jamAfter = 1;
-        if (jam == 1) {
-            jamAngle = readInRange("Enter jam angle theta_jam (degrees)", 1.0, 29.0);
-            printf("Enter the iteration t after which the gun jams (1-%d): ", k - 1);
-
-            scanf("%d", &jamAfter);
-            if (jamAfter < 1) jamAfter = 1;
-            if (jamAfter >= k) jamAfter = k - 1;
-        }
-
-        runPart1B(b, escorts, config->numEscorts, k, (double)jamAfter, jamAngle,
-                  jam == 1 ? "sim_jam" : "sim_path", config->battlefieldSize, false);
-        printf("\nPart 1-B finished. Iteration files saved as sim_path_part1B_iter*.txt "
-               "/ sim_jam_part1B_iter*.txt\n");
-    }else if (part == 3) {
-
-        printf("Do you want to run Part 1-C over a single position (1) or a "
-               "random k-point path (2)? ");
-        int mode = 0;
-        scanf("%d", &mode);
-
-        if (mode == 2) {
-            int k = 0;
-            printf("Enter the number of path points (k): ");
-            scanf("%d", &k);
-
-            if (k < 1) k = 1;
-            printf("Run with gun jamming (0<theta<30)? (1=yes, 0=no): ");
-            int jam = 0;
-            scanf("%d", &jam);
-
-            double jamAngle = 0.0;
-            int jamAfter = 1;
-            if (jam == 1){
-
-                jamAngle = readInRange("Enter jam angle theta_jam (degrees)", 1.0, 29.0);
-
-                printf("Enter the iteration t after which the gun jams (1-%d): ", k - 1);
-                scanf("%d", &jamAfter);
-
-                if (jamAfter < 1) jamAfter = 1;
-                if (jamAfter >= k) jamAfter = k - 1;
-            }
-            runPart1B(b, escorts, config->numEscorts, k, (double)jamAfter, jamAngle,
-                      jam == 1 ? "simC_jam" : "simC_path",
-                      config->battlefieldSize, true);
-
-            printf("\nPart 1-C path finished. Iteration files saved to text files.\n");
-
-        } else {
-            FILE *logFile = fopen("sim_output.txt", "w");
-            if (logFile) {
-                fprintf(logFile, "--- PART 1-C: INITIAL CONDITIONS ---\n");
-                fprintf(logFile, "Battleship: %s (%s) at (%.1f, %.1f) Vmax=%.1f Vmin=%.1f "
-                                 "angles %.1f-%.1f impact=%.3f\n",
-                        b->typeName, b->typeNotation, b->pos.x, b->pos.y, b->vMax,
-                        b->vMin, b->angleMin, b->angleMax, b->impactPower);
-                for (int i = 0; i < config->numEscorts; i++){
-                    fprintf(logFile, "Escort E%d (%s) at (%.1f, %.1f): Vmin=%.1f Vmax=%.1f "
-                                     "angles %.1f-%.1f impact=%.3f type=%s\n",
-                            escorts[i].id, escorts[i].typeNotation, escorts[i].pos.x,
-                            escorts[i].pos.y, escorts[i].vMin, escorts[i].vMax,
-                            escorts[i].angleMin, escorts[i].angleMax,
-                            escorts[i].impactPower, escorts[i].typeName);
-                }
-                printf("\nExecuting Part 1-C simulation...\n");
-                int sinker = -1;
-                runPart1A(b, escorts, config->numEscorts, logFile, true, &sinker);
-                fclose(logFile);
-                
-                printf("Part 1-C finished. Results saved to sim_output.txt\n");
-            } else {
-                printf("Failed to open file for logging results.\n");
-            }
-        }
-    } else {
-        FILE *logFile = fopen("sim_output.txt", "w");
-        if (logFile){
-            printf("\nExecuting Simulation... Results outputting to sim_output.txt\n");
-            runfullSimulation(b, escorts, config->numEscorts, logFile);
-            fclose(logFile);
-            printf("Simulation finished successfully.\n");
-        }else {
-            printf("Failed to open file for logging results.\n");
-        }
+    if(part >= 1 && part <= 3){
+        runPart1Simulation(config, b, escorts, part);
+    }else if (part >= 4 && part <= 6) {
+        runPart2Simulation(config, b, escorts, part);
+    }else{
+        printf("Invalid part option. Returning to main menu.\n");
     }
 
     free(escorts);
@@ -469,6 +390,7 @@ void start_simulation_flow(SimConfig *config, Battleship *b, EscortShip customEs
 static void generateEscortProperties(EscortShip *e, int typeIdx, double gridSize, double bVMax){
     const char *types[] = {"EA", "EB", "EC", "ED", "EE"};
     double baseImpacts[] = {0.08, 0.06, 0.07, 0.05, 0.04};
+
     double reloads[] = {2.0, 2.5, 2.2, 3.0, 3.5};
 
     //angle range (thetaH - thetaL) for each escort type, from Table 1
@@ -491,7 +413,7 @@ static void generateEscortProperties(EscortShip *e, int typeIdx, double gridSize
         
         e->vMin = 20.0 + ((double)(rand() % 100));
         e->vMax = e->vMin + ((double)(rand() % 80));
-        if (e->vMax >= bVMax){
+        if(e->vMax >= bVMax){
             e->vMax = bVMax - 10.0;
         }
         if (e->vMax <= e->vMin){
@@ -502,10 +424,11 @@ static void generateEscortProperties(EscortShip *e, int typeIdx, double gridSize
     //randomly generate angles within the range
     e->angleMin = 10.0 + (double)(rand() % 10);
     e->angleMax = e->angleMin + angleRanges[typeIdx];
-    if (e->angleMax > 90.0){
+
+    if(e->angleMax > 90.0){
         e->angleMax = 90.0;
     }
-    if (e->angleMax <= e->angleMin) {
+    if (e->angleMax <= e->angleMin){
         e->angleMax = e->angleMin + 5.0;
     }
 
