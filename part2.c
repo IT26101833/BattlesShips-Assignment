@@ -93,7 +93,7 @@ static void runPart2ASingle(Battleship *b, EscortShip escorts[], int numEscorts,
             fprintf(logFile, "Battleship survived. Escorts destroyed: %d/%d. Duration=%.2fs.\n", numEscorts - escortsRemaining, numEscorts, currentTime);
             if(escortsDealPartialDamage) {
 
-                fprintf(logFile, "Cumulative impact on B: %.2f%%.\n", b->health * 100.0);
+                fprintf(logFile, "Cumulative impact on B: %.2f%%.\n", (1.0 - b->health) * 100.0);
             }
         }
     }
@@ -179,6 +179,9 @@ static void runPart2BSingle(Battleship *b, EscortShip escorts[], int numEscorts,
                                      "(Destroyed! Impact=1.000)\n",
                             currentTime, b->shotsFired, escorts[targetIdx].id);
                 }
+            } else{
+                //no reachable escorts remain; end the battle
+                break;
             }
             bNextShotTime = currentTime + b->reloadTime;
         }
@@ -241,7 +244,7 @@ static void runPart2BSingle(Battleship *b, EscortShip escorts[], int numEscorts,
             fprintf(logFile, "Battleship survived. Escorts destroyed: %d/%d. Duration=%.2fs.\n",
                     numEscorts - escortsRemaining, numEscorts, currentTime);
             if (escortsDealPartialDamage) {
-                fprintf(logFile, "Cumulative impact on B: %.2f%%.\n", b->health * 100.0);
+                fprintf(logFile, "Cumulative impact on B: %.2f%%.\n", (1.0 - b->health) * 100.0);
             }
         }
     }
@@ -299,4 +302,44 @@ void runPart2B(Battleship *b, EscortShip escorts[], int numEscorts, int k,
         }
     }
     printf("Part 2-B path finished. Results saved as sim2B_path_iter*.txt\n");
+}
+
+//Part 2-C path mode: B moves along k random points with impact degradation
+void runPart2CPath(Battleship *b, EscortShip escorts[], int numEscorts, int k, double gridSize, const char *baseFile){
+    int sankAtPoint = -1;
+
+    for (int iter = 0; iter < k; iter++) {
+        moveBattleshipToRandomPoint(b, gridSize);
+
+        char fname[256];
+
+        snprintf(fname, sizeof(fname), "%s_part2C_iter%d.txt", baseFile, iter + 1);
+        FILE *logFile = fopen(fname, "w");
+        if (!logFile) {
+            printf("Failed to open %s for logging.\n", fname);
+            return;
+        }
+
+        fprintf(logFile, "--- PART 2-C PATH (iteration %d of %d) ---\n", iter + 1, k);
+        fprintf(logFile, "Battleship at (%.1f, %.1f)\n", b->pos.x, b->pos.y);
+
+        writeInitialConditions(logFile, b, escorts, numEscorts);
+
+        runfullSimulation(b, escorts, numEscorts, logFile);
+        fclose(logFile);
+
+        if (b->destroyed) {
+            sankAtPoint = iter + 1;
+            printf("Part 2-C path: Battleship sank at iteration %d. Simulation stopped.\n", iter + 1);
+            break;
+        }
+    }
+
+    if (sankAtPoint == -1){
+
+        printf("Part 2-C path finished. Battleship survived all %d points.\n", k);
+    } else{
+        
+        printf("Part 2-C path: Battleship sank at point %d of %d.\n", sankAtPoint, k);
+    }
 }

@@ -120,6 +120,21 @@ int selectTargetEscort(Battleship b, EscortShip escorts[], int numEscorts){
     return targetIdx;
 }
 
+//save the current impact factor of each ship to the log
+static void logCurrentImpactFactors(FILE *logFile, Battleship *b, EscortShip escorts[], int numEscorts){
+    if (!logFile) return;
+    fprintf(logFile, "--- CURRENT IMPACT FACTORS ---\n");
+    double bImpact = getDegradedImpact(b->impactPower, b->gamma, b->shotsFired);
+    fprintf(logFile, "Battleship (%s): IP=%.4f (base=%.3f, gamma=%.3f, shots=%d)\n",
+            b->typeNotation, bImpact, b->impactPower, b->gamma, b->shotsFired);
+    for(int i = 0; i < numEscorts; i++) {
+        if (escorts[i].destroyed) continue;
+        double eImpact = getDegradedImpact(escorts[i].impactPower, escorts[i].gamma, escorts[i].shotsFired);
+        fprintf(logFile, "Escort E%d (%s): IP=%.4f (base=%.3f, gamma=%.3f, shots=%d)\n", escorts[i].id, escorts[i].typeNotation, eImpact, escorts[i].impactPower,
+                escorts[i].gamma, escorts[i].shotsFired);
+    }
+}
+
 //combined simulation:continuous fire,  per-type reload times, impact power
 void runfullSimulation(Battleship *b, EscortShip escorts[], int numEscorts, FILE *logFile) {
     double currentTime = 0.0;
@@ -139,29 +154,19 @@ void runfullSimulation(Battleship *b, EscortShip escorts[], int numEscorts, FILE
                 b->gamma, b->reloadTime);
 
         for (int i = 0; i < numEscorts; i++) {
+            if (escorts[i].destroyed) continue;
             fprintf(logFile, "Escort E%d (%s) at (%.1f, %.1f): Vmin=%.1f Vmax=%.1f, "
                              "angles %.1f-%.1f, impact=%.3f, gamma=%.3f, reload=%.1fs\n", escorts[i].id, escorts[i].typeNotation, escorts[i].pos.x, escorts[i].pos.y, escorts[i].vMin, escorts[i].vMax,
                     escorts[i].angleMin, escorts[i].angleMax, escorts[i].impactPower,
                     escorts[i].gamma, escorts[i].reloadTime);
         }
 
-        //attack order of E ships within B's attack range
-        fprintf(logFile, "--- B's ATTACK ORDER (by threat priority) ---\n");
-        int orderCount = 0;
-        for (int i = 0; i < numEscorts; i++) {
-            double tof;
-            if (canHitTarget(b->pos, escorts[i].pos, b->vMin, b->vMax, b->angleMin, b->angleMax, &tof)) {
-                orderCount++;
-                fprintf(logFile, "  Priority %d: Escort E%d\n", orderCount, escorts[i].id);
-            }
-        }
-        if (orderCount == 0) {
-            fprintf(logFile, "  No escort ships are within B's attack range.\n");
-        }
+        //attack order of E ships within B's attack range by threat
+        logAttackOrder(logFile, *b, escorts, numEscorts);
         fprintf(logFile, "--- SIMULATION START ---\n");
     }
 
-    while (!b->destroyed && escortsRemaining > 0 && currentTime < 1000.0) {
+    while(!b->destroyed && escortsRemaining > 0 && currentTime < 1000.0) {
         //battleship firing logic
         if (currentTime >= bNextShotTime) {
             int targetIdx = selectTargetEscort(*b, escorts, numEscorts);
@@ -188,6 +193,9 @@ void runfullSimulation(Battleship *b, EscortShip escorts[], int numEscorts, FILE
                             currentBImpact, escorts[targetIdx].id,
                             escorts[targetIdx].health * 100.0);
                 }
+            } else {
+                //no reachable escorts remain; end the battle
+                break;
             }
             bNextShotTime = currentTime + b->reloadTime;
         }
@@ -238,6 +246,7 @@ void runfullSimulation(Battleship *b, EscortShip escorts[], int numEscorts, FILE
                 b->health > 0 ? b->health * 100.0 : 0.0,
 
                 numEscorts - escortsRemaining, numEscorts, currentTime);
+        logCurrentImpactFactors(logFile, b, escorts, numEscorts);
     }
 
     //display the result on the console
@@ -249,3 +258,4 @@ void runfullSimulation(Battleship *b, EscortShip escorts[], int numEscorts, FILE
         printf("Battleship SURVIVED (health %.2f%%). Escorts destroyed: %d/%d over %.2fs.\n", b->health * 100.0, numEscorts - escortsRemaining, numEscorts, currentTime);
     }
 }
+

@@ -7,5 +7,6 @@
 
 void runPart2A(Battleship *b, EscortShip escorts[], int numEscorts, int k, double gridSize, bool escortsDealPartialDamage);
 void runPart2B(Battleship *b, EscortShip escorts[], int numEscorts, int k, double gridSize, bool escortsDealPartialDamage);
+void runPart2CPath(Battleship *b, EscortShip escorts[], int numEscorts, int k, double gridSize, const char *baseFile);
 
 #endif

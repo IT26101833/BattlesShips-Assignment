@@ -10,7 +10,6 @@
 int main(){
 
 
-
     SimConfig config = {1000.0, (unsigned int)time(NULL), 10};
     srand(config.seed);
 

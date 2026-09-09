@@ -7,8 +7,8 @@
 //Part 2-A and Part 2-B re-simulate the Part 1 scenarios with reload times.
 static void runPart2Scenario(int part, Battleship *b, EscortShip escorts[], int numEscorts, double gridSize){
     int scenario = 0;
-    printf("\nChoose which Part 1 scenario to re-simulate with Part %d-%c features:\n",
-           part, part == 2 ? 'A' : 'B');
+    printf("\nChoose which Part 1 scenario to re-simulate with Part 2-%c features:\n",
+           part == 2 ? 'A' : 'B');
     printf("  1.) Part 1-A scenario  (single position; one E hit destroys B)\n");
 
     printf("  2.) Part 1-B scenario  (random k-point path and one E hit destroys B)\n");
@@ -46,6 +46,40 @@ void runPart2Simulation(SimConfig *config, Battleship *b, EscortShip escorts[], 
     }else if (part == 5){
 
         runPart2Scenario(3, b, escorts, config->numEscorts, config->battlefieldSize);
+    } else if (part == 6){
+        int scenario = 0;
+        printf("\nChoose which Part 1 scenario to re-simulate with Part 2-C features:\n");
+        printf("  1.) Part 1-C scenario  (single position; E ships deal partial damage with degradation)\n");
+        printf("  2.) Part 1-C path      (random k-point path with partial damage and degradation)\n");
+        printf("Enter option: ");
+        if (scanf("%d", &scenario) != 1) return;
+
+        if (scenario < 1 || scenario > 2) {
+            scenario = 1;
+        }
+
+        int k = 1;
+        if (scenario == 2) {
+            printf("Enter the number of path points (k): ");
+            scanf("%d", &k);
+            if (k < 1) k = 1;
+        }
+
+        if (scenario == 1) {
+            FILE *logFile = fopen("sim2C_output.txt", "w");
+            if (logFile) {
+                printf("\nExecuting Part 2-C simulation... Results outputting to sim2C_output.txt\n");
+                fprintf(logFile, "--- PART 2-C (single position) ---\n");
+                runfullSimulation(b, escorts, config->numEscorts, logFile);
+                fclose(logFile);
+                printf("Part 2-C finished. Results saved to sim2C_output.txt\n");
+            } else {
+                printf("Failed to open file for logging results.\n");
+            }
+        } else {
+            runPart2CPath(b, escorts, config->numEscorts, k, config->battlefieldSize, "sim2C_path");
+            printf("\nPart 2-C path finished. Iteration files saved as sim2C_path_part2C_iter*.txt\n");
+        }
     } else{
 
         FILE *logFile = fopen("sim_output.txt", "w");

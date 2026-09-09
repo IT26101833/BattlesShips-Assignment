@@ -85,11 +85,13 @@ int runPart1A(Battleship *b, EscortShip escorts[], int numEscorts, FILE *logFile
     if (logFile) {
         fprintf(logFile, "--- PART 1 RESULT ---\n");
         if(b->destroyed) {
-
             fprintf(logFile, "Battleship sank. Sunk by Escort E%d. Duration=%.2fs.\n",
                     destroyerId, shotTime);
         } else{
             fprintf(logFile, "Battleship survived. Escorts destroyed: %d/%d. Duration=%.2fs.\n", numEscorts - escortsRemaining, numEscorts, shotTime);
+            if (escortsDealPartialDamage) {
+                fprintf(logFile, "Cumulative impact on B: %.2f%%.\n", (1.0 - b->health) * 100.0);
+            }
         }
     }
 

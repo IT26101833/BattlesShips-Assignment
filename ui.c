@@ -187,13 +187,7 @@ void view_instructions(void){
     printf("              B keeps its reload time and attack-order strategy\n");
     printf("    Part 2-C : combined - reload times (T_B, T_E), continuous fire,\n");
     printf("              impact-power degradation (IP = IP0*e^-gamma*n)\n");
-    printf("  If B sinks, the index of the escort that sank it is shown.\n");
-    printf("  If B survives, the number of escorts destroyed and the battle duration\n");
-    printf("  are shown. The full log (initial conditions + every shot + B's attack\n");
-    printf("  order) is saved to sim_output.txt / sim2A_output.txt / sim2B_output.txt\n");
-    printf("  and can be viewed from 'Simulation Statistics'. Part 1-B saves one\n");
-    printf("  log file per iteration \n");
-    printf("  sim2A_path_iter*.txt / sim2B_path_iter*.txt).\n");
+    
    
     printf("====================================================================================\n");
 }
@@ -228,8 +222,8 @@ void view_statistics(void){
     }
 
     //read Part 2 path iteration logs (sim2A_path / sim2B_path)
-    const char *part2Prefixes[] = {"sim2A_path_iter", "sim2B_path_iter"};
-    for (int p = 0; p < 2; p++) {
+    const char *part2Prefixes[] = {"sim2A_path_iter", "sim2B_path_iter", "sim2C_path_part2C_iter"};
+    for (int p = 0; p < 3; p++) {
         int iter = 1;
         while (1) {
             char filename[256];
@@ -253,8 +247,8 @@ void view_statistics(void){
     }
 
     //read single-position output files from all parts
-    const char *mainFiles[] = {"sim_output.txt", "sim2A_output.txt", "sim2B_output.txt"};
-    for (int m = 0; m < 3; m++) {
+    const char *mainFiles[] = {"sim_output.txt", "sim2A_output.txt", "sim2B_output.txt", "sim2C_output.txt"};
+    for (int m = 0; m < 4; m++) {
         FILE *pFile = fopen(mainFiles[m], "r");
         if (pFile) {
             printf("\n--- %s ---\n", mainFiles[m]);
@@ -373,10 +367,12 @@ printf("Enter option: ");
     scanf("%d", &part);
 
     if(part >= 1 && part <= 3){
+
         runPart1Simulation(config, b, escorts, part);
     }else if (part >= 4 && part <= 6) {
         runPart2Simulation(config, b, escorts, part);
     }else{
+
         printf("Invalid part option. Returning to main menu.\n");
     }
 
@@ -466,27 +462,32 @@ void main_menu(SimConfig *config, Battleship *b){
         switch(option) {
             case 1: 
                 setup(tempEscorts, b, config);
+
                 start_simulation_flow(config, b, tempEscorts);
                 break;
             case 2:
+
                 view_instructions();
                 break;
             case 3:
                 view_statistics();
                 break;
             case 4:
+
                 printf("Are you sure you want to exit? (1=yes, 0=no): ");
                 int confirm = 0;
                 scanf("%d", &confirm);
-                if (confirm == 1) {
+
+                if (confirm == 1){
                     printf("Exiting Program...\n");
                     option = 4;
-                } else {
+                }else {
                     option = 0;
                     printf("Returning to main menu...\n");
                 }
                 break;
             default:
+
                 printf("Option out of range.\n");
         }
     } while(option != 4);
