@@ -192,11 +192,9 @@ void view_instructions(void){
     printf("  are shown. The full log (initial conditions + every shot + B's attack\n");
     printf("  order) is saved to sim_output.txt / sim2A_output.txt / sim2B_output.txt\n");
     printf("  and can be viewed from 'Simulation Statistics'. Part 1-B saves one\n");
-    printf("  log file per iteration (sim_path_part1B_iter*.txt / sim_jam* / simC_*\n");
+    printf("  log file per iteration \n");
     printf("  sim2A_path_iter*.txt / sim2B_path_iter*.txt).\n");
-    printf("  IMPORTANT: velocities are shell muzzle velocities in m/s. Pick a canvas\n");
-    printf("  size D and velocities so that the gun ranges (v^2/g) overlap the canvas\n");
-    printf("  - otherwise ships cannot reach each other and no battle occurs.\n");
+   
     printf("====================================================================================\n");
 }
 
